@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="{{ session('theme', 'light') === 'dark' ? 'dark' : '' }}">
 
 <head>
     <meta charset="utf-8">
@@ -12,8 +12,40 @@
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
 
-    <!-- Scripts -->
+    <!-- Font Awesome CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    {{-- ^^^ BARIS INI DITAMBAHKAN untuk memuat Chart.js ^^^ --}}
+
+    <!-- Scripts & Styles (Vite) -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+
+    {{-- Script untuk Dark Mode Toggle dari respons sebelumnya --}}
+    <script>
+        // Cek local storage saat halaman dimuat
+        if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+          document.documentElement.classList.add('dark')
+          localStorage.setItem('theme', 'dark');
+        } else {
+          document.documentElement.classList.remove('dark')
+          localStorage.setItem('theme', 'light');
+        }
+
+        // Fungsi untuk toggle tema
+        function toggleTheme() {
+          if (localStorage.getItem('theme') === 'dark') {
+            localStorage.setItem('theme', 'light');
+            document.documentElement.classList.remove('dark');
+          } else {
+            localStorage.setItem('theme', 'dark');
+            document.documentElement.classList.add('dark');
+          }
+        }
+    </script>
+
+    @stack('styles') {{-- Untuk CSS spesifik per halaman jika ada --}}
 </head>
 
 <body class="font-sans antialiased">
